@@ -22,6 +22,44 @@ describe('User', () => {
         expect(response.body.password).toBeTruthy()
     });
 
+    it ('should get a specific user and his projects', async () => {
+        const { body: { _id } } = await request
+            .post('/api/user')
+            .send({
+                name: 'Teste name',
+                email: 'test@email.com',
+                password: '123456',
+            })
+
+        await request
+            .post('/api/project')
+            .send({
+                name: 'Tarefas Domésticas',
+                user_id: _id,
+                tasks: [
+                    {
+                        name: 'Varrer a casa',
+                        done: false,
+                    },
+                    {
+                        name: 'Lavar a louça',
+                        done: false
+                    }
+                ]
+            })
+
+        const response = await request
+            .get(`/api/user/${_id}`)
+
+
+        expect(response.status).toBe(200);
+        expect(response.body._id).toContain(_id);
+        expect(response.body.projects).toHaveLength(1);
+        expect(response.body.projects[0].name).toContain('Tarefas Domésticas');
+        expect(response.body.projects[0].tasks).toHaveLength(2);
+        expect(response.body.projects[0].tasks[0].name).toContain('Varrer a casa');
+    })
+
     it('should not save user if it has already been defined', async () => {
         await request
             .post('/api/user')

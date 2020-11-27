@@ -1,4 +1,6 @@
 import { Request, Response } from 'express'
+import mongoose from 'mongoose'
+import Project from '../models/Project'
 
 import User from '../models/User'
 import { handleError } from '../utils'
@@ -7,6 +9,37 @@ export default  {
     async index (req: Request, res: Response) {
         const users = await User.find({}).lean()
         res.json(users)
+    },
+
+    async get (req: Request, res: Response) {
+        const { _id } = req.params;
+
+        try {
+            const user = await User.findOne({_id}).lean();
+
+            const ObjectId = mongoose.Types.ObjectId;
+            const projects = await Project.aggregate([
+                {
+                    $match: {
+                        user_id: ObjectId(_id)
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'tasks',
+                        localField: '_id',
+                        foreignField: 'projectId',
+                        as: 'tasks'
+                    }
+                }
+            ]);
+
+            const obj = {...user, projects}
+    
+            res.status(200).json(obj);
+        } catch (e) {
+            handleError(res, e.message)
+        }
     },
 
     async store (req: Request, res: Response) {

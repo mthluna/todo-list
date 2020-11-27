@@ -8,10 +8,20 @@ const request = supertest(app);
 
 describe('Project', () => {
     it('should save project with two tasks to database', async () => {
+
+        const {body: { _id }} = await request
+        .post('/api/user')
+        .send({
+            name: 'Teste name',
+            email: 'test@email.com',
+            password: '123456',
+        })
+
         const response = await request
           .post('/api/project')
           .send({
               name: 'Tarefas Domésticas',
+              user_id: _id,
               tasks: [
                   {
                       name: 'Varrer a casa',
@@ -26,6 +36,7 @@ describe('Project', () => {
     
           expect(response.status).toBe(200);
           expect(response.body.name).toBeTruthy()
+          expect(response.body.user_id).toContain(_id)
           expect(response.body.tasks).toHaveLength(2);
           expect(response.body.tasks[0].projectId).toContain(response.body._id);
     });

@@ -58,9 +58,9 @@ export default  {
     },
 
     async store (req: Request, res: Response) {
-        const { name, tasks } = req.body;
+        const { name, tasks, user_id } = req.body;
 
-        const newProject = new Project({name})
+        const newProject = new Project({name, user_id})
 
         newProject.save(async (err, response) => {
             if (err) {

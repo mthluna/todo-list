@@ -8,6 +8,7 @@ const routes = Router();
 
 routes.get('/users', UserController.index)
 routes.post('/user', UserController.store)
+routes.get('/user/:_id', UserController.get)
 routes.put('/user/:_id', UserController.update)
 routes.delete('/user/:_id', UserController.delete)
 
