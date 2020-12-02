@@ -9,7 +9,7 @@ const request = supertest(app);
 describe('Project', () => {
     it('should save project with two tasks to database', async () => {
 
-        const {body: { _id }} = await request
+        const {body: { _id: user_id }} = await request
         .post('/api/user')
         .send({
             name: 'Teste name',
@@ -21,7 +21,7 @@ describe('Project', () => {
           .post('/api/project')
           .send({
               name: 'Tarefas Domésticas',
-              user_id: _id,
+              user_id,
               tasks: [
                   {
                       name: 'Varrer a casa',
@@ -36,16 +36,25 @@ describe('Project', () => {
     
           expect(response.status).toBe(200);
           expect(response.body.name).toBeTruthy()
-          expect(response.body.user_id).toContain(_id)
+          expect(response.body.user_id).toContain(user_id)
           expect(response.body.tasks).toHaveLength(2);
           expect(response.body.tasks[0].projectId).toContain(response.body._id);
     });
   
     it('should save project with zero tasks to database', async () => {
+        const {body: { _id: user_id }} = await request
+        .post('/api/user')
+        .send({
+            name: 'Teste name',
+            email: 'test@email.com',
+            password: '123456',
+        })
+
         const response = await request
         .post('/api/project')
         .send({
-            name: 'Tarefas Domésticas'
+            name: 'Tarefas Domésticas',
+            user_id
         })
 
         expect(response.status).toBe(200);
@@ -54,10 +63,19 @@ describe('Project', () => {
     });
 
     it('should update project', async () => {
+        const {body: { _id: user_id }} = await request
+        .post('/api/user')
+        .send({
+            name: 'Teste name',
+            email: 'test@email.com',
+            password: '123456',
+        })
+
         const {body: {_id}} = await request
         .post('/api/project')
         .send({
-            name: 'Tarefas Domésticas'
+            name: 'Tarefas Domésticas',
+            user_id
         })
 
         const response = await request
@@ -71,10 +89,19 @@ describe('Project', () => {
     })
 
     it('should list all projects', async () => {
+        const {body: { _id: user_id }} = await request
+        .post('/api/user')
+        .send({
+            name: 'Teste name',
+            email: 'test@email.com',
+            password: '123456',
+        })
+
         await request
         .post('/api/project')
         .send({
             name: 'Tarefas Domésticas',
+            user_id,
             tasks: [
                 {
                     name: 'Varrer a casa',
@@ -91,6 +118,7 @@ describe('Project', () => {
         .post('/api/project')
         .send({
             name: 'Trabalhos Faculdade',
+            user_id
         })
 
         const response = await request
@@ -103,10 +131,19 @@ describe('Project', () => {
     })
 
     it ('should get a specific project', async () => {
+        const {body: { _id: user_id }} = await request
+        .post('/api/user')
+        .send({
+            name: 'Teste name',
+            email: 'test@email.com',
+            password: '123456',
+        })
+
         const { body: { _id } } = await request
         .post('/api/project')
         .send({
             name: 'Tarefas Domésticas',
+            user_id,
             tasks: [
                 {
                     name: 'Varrer a casa',
@@ -137,10 +174,19 @@ describe('Project', () => {
     })
 
     it('should delete project and tasks', async () => {
+        const {body: { _id: user_id }} = await request
+        .post('/api/user')
+        .send({
+            name: 'Teste name',
+            email: 'test@email.com',
+            password: '123456',
+        })
+
         const {body: project} = await request
           .post('/api/project')
           .send({
               name: 'Tarefas Domésticas',
+              user_id,
               tasks: [
                   {
                     name: 'Varrer a casa',

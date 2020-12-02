@@ -1,8 +1,13 @@
-import mongoose from 'mongoose'
+import mongoose, { Schema, Document } from 'mongoose'
 
-const Schema = mongoose.Schema
+export interface ITask extends Document {
+    _id: string,
+    name: string,
+    done: boolean,
+    projectId: string
+}
 
-const taskSchema = new Schema({
+const taskSchema: Schema = new Schema({
     name: {
         type: String,
         required: true
@@ -18,4 +23,4 @@ const taskSchema = new Schema({
     }
 }, {collection: 'tasks'})
 
-export default mongoose.model('tasks', taskSchema)
+export default mongoose.model<ITask>('tasks', taskSchema)

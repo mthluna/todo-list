@@ -1,5 +1,10 @@
-import mongoose from 'mongoose'
+import mongoose, { Connection } from 'mongoose'
 import { MongoMemoryServer } from 'mongodb-memory-server'
+import { Db } from 'mongodb';
+
+interface ConnectionI extends Connection {
+  db?: Db
+}
 
 export default () => {
     let mongoServer: MongoMemoryServer;
@@ -20,9 +25,13 @@ export default () => {
     });
     
     afterEach(async () => {
-      const collections: any = await mongoose.connection.db.collections();
-      for (let collection of collections) {
-        await collection.deleteMany();
+      const connection: ConnectionI = await mongoose.connection;
+
+      if (connection.db) {
+        const collections = await connection.db.collections();
+        for (let collection of collections) {
+          await collection.deleteMany({});
+        }
       }
     });
 }

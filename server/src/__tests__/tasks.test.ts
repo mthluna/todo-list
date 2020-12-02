@@ -8,10 +8,20 @@ const request = supertest(app);
 
 describe('Tasks', () => {
     it('should save a task to database', async () => {
+
+        const {body: { _id: user_id }} = await request
+        .post('/api/user')
+        .send({
+            name: 'Teste name',
+            email: 'test@email.com',
+            password: '123456',
+        })
+
         const  {body: { _id } } = await request
         .post('/api/project')
         .send({
-            name: 'Tarefas Domésticas'
+            name: 'Tarefas Domésticas',
+            user_id
         })
 
         const response = await request
@@ -28,10 +38,19 @@ describe('Tasks', () => {
     })
 
     it('should update a task to database', async () => {
+        const {body: { _id: user_id }} = await request
+        .post('/api/user')
+        .send({
+            name: 'Teste name',
+            email: 'test@email.com',
+            password: '123456',
+        })
+
         const  {body: { _id: projectId } } = await request
             .post('/api/project')
             .send({
-                name: 'Tarefas Domésticas'
+                name: 'Tarefas Domésticas',
+                user_id
             })
 
         const { body: { _id }} = await request
@@ -53,10 +72,19 @@ describe('Tasks', () => {
     })
 
     it('should delete a specific task', async () => {
+        const {body: { _id: user_id }} = await request
+        .post('/api/user')
+        .send({
+            name: 'Teste name',
+            email: 'test@email.com',
+            password: '123456',
+        })
+
         const  {body: { _id: projectId } } = await request
             .post('/api/project')
             .send({
-                name: 'Tarefas Domésticas'
+                name: 'Tarefas Domésticas',
+                user_id
             })
 
         const { body: { _id } } = await request
@@ -73,10 +101,19 @@ describe('Tasks', () => {
     });
 
     it ('should get a specific task', async () => {
+        const {body: { _id: user_id }} = await request
+        .post('/api/user')
+        .send({
+            name: 'Teste name',
+            email: 'test@email.com',
+            password: '123456',
+        })
+
         const  {body: { _id: projectId } } = await request
             .post('/api/project')
             .send({
-                name: 'Tarefas Domésticas'
+                name: 'Tarefas Domésticas',
+                user_id
             })
 
         const { body: { _id } } = await request

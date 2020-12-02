@@ -2,20 +2,13 @@ import { Request, Response } from 'express'
 import mongoose from 'mongoose'
 
 import Project from '../models/Project'
-import Task from '../models/Task'
+import Task, { ITask } from '../models/Task'
 
 import { handleError } from '../utils/index'
 
-interface taskI {
-    _id: String,
-    name: String,
-    done: Boolean,
-    projectId: String
-}
-
 export default  {
     async index (req: Request, res: Response) {
-        const projects = await Project.collection.aggregate([
+        const projects = await Project.aggregate([
             {
                 $lookup: {
                     from: 'tasks',
@@ -24,7 +17,7 @@ export default  {
                     as: 'tasks'
                 }
             }
-        ]).toArray()
+        ])
 
         res.status(200).json(projects)
     },
@@ -68,13 +61,14 @@ export default  {
             }
 
             try {
-                const project = response.toJSON();
-                let insertedTasks = [];
+                const project = response;
+                let insertedTasks: Array<ITask> = [];
 
                 if (tasks) {
-                    const tasksArr = tasks.map((task: Array<taskI>) => ({...task, projectId: project._id}))
-                    const response = await Task.collection.insertMany([...tasksArr])
-                    insertedTasks = response.ops;
+                    const tasksArr = tasks.map((task: Array<ITask>) => ({...task, projectId: project._id}))
+                    const response = await Task.insertMany([...tasksArr])
+
+                    insertedTasks = response;
                 }
 
                 res.status(200).json({...response.toJSON(), tasks: insertedTasks});
@@ -120,7 +114,7 @@ export default  {
                 }
             ]);
 
-            const tasks = project.tasks.map((task: taskI) => task._id)
+            const tasks = project.tasks.map((task: ITask) => task._id)
             await Task.deleteMany({_id: {$in: tasks}})
 
             const response = await Project.deleteMany({_id})

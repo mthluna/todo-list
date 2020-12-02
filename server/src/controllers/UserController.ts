@@ -1,8 +1,10 @@
 import { Request, Response } from 'express'
 import mongoose from 'mongoose'
-import Project from '../models/Project'
+import bcrypt from 'bcrypt'
 
+import Project from '../models/Project'
 import User from '../models/User'
+
 import { handleError } from '../utils'
 
 export default  {
@@ -45,19 +47,17 @@ export default  {
     async store (req: Request, res: Response) {
         const { name, email, password } = req.body;
 
+        const hash = await bcrypt.hash(password, 10)
+
         const newUser = new User({
             name,
             email,
-            password
+            password: hash
         })
 
         newUser.save((err) => {
             if (err) {
-                res.status(500).json({
-                    error: err.message
-                })
-                res.end()
-                return
+                return handleError(res, err.message)
             }
 
             res.status(200).json(newUser);
@@ -69,7 +69,9 @@ export default  {
         const { name, email, password } = req.body;
         const { _id } = req.params;
         
-        User.updateOne({_id}, {name, email, password}, (err, response) => {
+        const hash = await bcrypt.hash(password, 10)
+
+        User.updateOne({_id}, {name, email, password: hash}, (err, response) => {
             if (err) {
                 return handleError(res, err.message)
             }
