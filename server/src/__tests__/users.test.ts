@@ -3,7 +3,7 @@ import setupDB from '../setup-test'
 setupDB();
 
 import supertest from 'supertest'
-import app from '../server'
+import app from '../app'
 const request = supertest(app);
 
 describe('User', () => {
