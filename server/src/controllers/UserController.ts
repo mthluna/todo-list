@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 import Project from '../models/Project'
 import User from '../models/User'
@@ -92,5 +93,32 @@ export default  {
             res.status(204);
             res.end();
         })
-    }
+    },
+
+    async auth (req: Request, res: Response) {
+        const { email, password } = req.body;
+
+        try {
+            const user = await User.findOne({email}).lean();
+
+            if(!user)  return handleError(res, 'Invalid Login')
+
+            const comparePass = await bcrypt.compare(password, user.password);
+
+            if (email !== user.email || !comparePass) {
+                return handleError(res, 'Invalid Login')
+            }
+
+            const token = jwt.sign({ id: user._id }, 'mysecret', {
+                expiresIn: 300 // expires in 5min
+            });
+
+            return res.status(200).json({ 
+                auth: true, 
+                token
+            });
+        } catch (e) {
+            handleError(res, e.message)
+        }
+    },
 }

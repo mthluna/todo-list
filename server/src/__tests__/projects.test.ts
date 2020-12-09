@@ -1,10 +1,5 @@
-import setupDB from '../setup-test'
-
+import setupDB, { request } from '../setup-test'
 setupDB();
-
-import supertest from 'supertest'
-import app from '../app'
-const request = supertest(app);
 
 describe('Project', () => {
     it('should save project with two tasks to database', async () => {
@@ -13,7 +8,7 @@ describe('Project', () => {
         .post('/api/user')
         .send({
             name: 'Teste name',
-            email: 'test@email.com',
+            email: 'test@email.com.br',
             password: '123456',
         })
 
@@ -46,7 +41,7 @@ describe('Project', () => {
         .post('/api/user')
         .send({
             name: 'Teste name',
-            email: 'test@email.com',
+            email: 'test@email.com.br',
             password: '123456',
         })
 
@@ -67,7 +62,7 @@ describe('Project', () => {
         .post('/api/user')
         .send({
             name: 'Teste name',
-            email: 'test@email.com',
+            email: 'test@email.com.br',
             password: '123456',
         })
 
@@ -93,7 +88,7 @@ describe('Project', () => {
         .post('/api/user')
         .send({
             name: 'Teste name',
-            email: 'test@email.com',
+            email: 'test@email.com.br',
             password: '123456',
         })
 
@@ -135,7 +130,7 @@ describe('Project', () => {
         .post('/api/user')
         .send({
             name: 'Teste name',
-            email: 'test@email.com',
+            email: 'test@email.com.br',
             password: '123456',
         })
 
@@ -178,7 +173,7 @@ describe('Project', () => {
         .post('/api/user')
         .send({
             name: 'Teste name',
-            email: 'test@email.com',
+            email: 'test@email.com.br',
             password: '123456',
         })
 

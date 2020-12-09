@@ -1,10 +1,5 @@
-import setupDB from '../setup-test'
-
+import setupDB, { request } from '../setup-test'
 setupDB();
-
-import supertest from 'supertest'
-import app from '../app'
-const request = supertest(app);
 
 describe('User', () => {
     it('should save user to database', async () => {
@@ -12,7 +7,7 @@ describe('User', () => {
         .post('/api/user')
         .send({
             name: 'Teste name',
-            email: 'test@email.com',
+            email: 'test@email.com.br',
             password: '123456',
         })
   
@@ -27,7 +22,7 @@ describe('User', () => {
             .post('/api/user')
             .send({
                 name: 'Teste name',
-                email: 'test@email.com',
+                email: 'test@email.com.br',
                 password: '123456',
             })
 
@@ -65,7 +60,7 @@ describe('User', () => {
             .post('/api/user')
             .send({
                 name: 'Teste name',
-                email: 'test@email.com',
+                email: 'test@email.com.br',
                 password: '123456',
             })
 
@@ -73,7 +68,7 @@ describe('User', () => {
             .post('/api/user')
             .send({
                 name: 'Teste name 2',
-                email: 'test@email.com',
+                email: 'test@email.com.br',
                 password: '123',
             })
 
@@ -92,7 +87,7 @@ describe('User', () => {
             .post('/api/user')
             .send({
                 name: 'Teste name',
-                email: 'test@email.com',
+                email: 'test@email.com.br',
                 password: '123456',
             })
 
@@ -113,7 +108,7 @@ describe('User', () => {
             .post('/api/user')
             .send({
                 name: 'Teste name',
-                email: 'test@email.com',
+                email: 'test@email.com.br',
                 password: '123456',
             })
 
